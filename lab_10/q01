@@ -1,0 +1,44 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+using namespace std;
+
+void insertToMaxHeap(priority_queue<pair<int, int>>& maxHeap, int value, int index) {
+    maxHeap.push({value, index});
+}
+
+int getMaxFromHeap(priority_queue<pair<int, int>>& maxHeap, int currentIndex, int k) {
+    while (!maxHeap.empty() && maxHeap.top().second <= currentIndex - k) {
+        maxHeap.pop();
+    }
+    return maxHeap.top().first;
+}
+
+vector<int> slidingWindowMax(vector<int>& nums, int k) {
+    vector<int> result;
+    priority_queue<pair<int, int>> maxHeap;
+
+    for (int i = 0; i < nums.size(); i++) {
+        insertToMaxHeap(maxHeap, nums[i], i);
+
+        if (i >= k - 1) {
+            result.push_back(getMaxFromHeap(maxHeap, i, k));
+        }
+    }
+
+    return result;
+}
+
+int main() {
+    vector<int> nums = {1, 3, -1, -3, 5, 3, 6, 7};
+    int k = 3;
+    vector<int> result = slidingWindowMax(nums, k);
+
+    cout << "Sliding Window Maximum: ";
+    for (int num : result) {
+        cout << num << " ";
+    }
+    cout << endl;
+
+    return 0;
+}
